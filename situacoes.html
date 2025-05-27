@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Situações de Aprendizagem</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #3f4a6b;
+      --bg: rgba(255, 255, 255, 0.95);
+      --text: #333;
+    }
+    * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #3f4a6b, #0f2027);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+    .container {
+      background: var(--bg);
+      padding: 2rem;
+      border-radius: 16px;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      animation: fadeIn 1s ease forwards;
+      opacity: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+    h2 { color: var(--primary); margin-bottom: 0.5rem; }
+    .description { font-size: 0.9rem; color: #555; margin-bottom: 1rem; }
+    input, button, select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 0.9rem;
+      transition: 0.3s;
+    }
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 5px rgba(63, 74, 107, 0.5);
+    }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: transform 0.2s, background 0.3s;
+    }
+    button:hover { background: #2c354d; transform: scale(1.05); }
+    .btn-outline {
+      background: none;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover { background: rgba(63, 74, 107, 0.1); }
+    .file-item {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      animation: fadeInItem 0.5s ease;
+    }
+    @keyframes fadeInItem {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .file-actions button {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      margin-left: 0.3rem;
+      font-size: 1rem;
+      transition: 0.3s;
+    }
+    .file-actions button:hover { color: #2c354d; }
+    .drop-zone {
+      padding: 1rem;
+      border: 2px dashed var(--primary);
+      border-radius: 8px;
+      text-align: center;
+      transition: background 0.3s ease;
+    }
+    .drop-zone.dragover { background: rgba(63, 74, 107, 0.1); }
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    footer {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid #ddd;
+    }
+    .back {
+      text-decoration: none;
+      color: var(--primary);
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+  </style>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+<div class="container">
+  <a class="back" href="home.html"><i class="bi bi-arrow-left"></i> Voltar</a>
+  <h2><i class="bi bi-book"></i> Situações de Aprendizagem</h2>
+  <p class="description">Envie, pesquise, edite e gerencie atividades.</p>
+
+  <section>
+    <select id="filterCategoria">
+      <option value="">Todas as Categorias</option>
+      <option value="Web">Web</option>
+      <option value="Logística">Logística</option>
+      <option value="Administração">Administração</option>
+    </select>
+    <input type="text" id="searchInput" placeholder="Pesquisar pelo nome...">
+    <input type="date" id="filterDate">
+    <button class="btn-outline" id="btnOrdenar"><i class="bi bi-sort-alpha-down"></i> Ordenar A-Z</button>
+  </section>
+
+  <section>
+    <div class="drop-zone" id="dropZone">Arraste e solte os arquivos aqui</div>
+    <input type="file" id="arquivo" multiple>
+    <button id="btnEnviar"><i class="bi bi-upload"></i> Enviar Arquivo(s)</button>
+    <button class="btn-outline" id="btnExportar"><i class="bi bi-download"></i> Exportar Todos</button>
+  </section>
+
+  <section>
+    <h3>Arquivos Cadastrados (<span id="totalCount">0</span>)</h3>
+    <div id="arquivosList"></div>
+  </section>
+
+  <footer>&copy; 2025 Situações de Aprendizagem</footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+<script>
+  particlesJS('particles-js', {
+    particles: { number: { value: 80 }, color: { value: "#ffffff" }, shape: { type: "circle" }, opacity: { value: 0.3 }, size: { value: 3 }, line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 }, move: { enable: true, speed: 3 } },
+    interactivity: { detect_on: "canvas", events: { onhover: { enable: true, mode: "repulse" } }, modes: { repulse: { distance: 100 } } }
+  });
+
+  let arquivos = JSON.parse(localStorage.getItem('situacoesArquivos')) || [];
+  const toast = document.getElementById('toast');
+
+  function mostrarToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  function renderArquivos() {
+    const filtro = document.getElementById('searchInput').value.toLowerCase();
+    const dataFiltro = document.getElementById('filterDate').value;
+    const categoriaFiltro = document.getElementById('filterCategoria').value;
+    const container = document.getElementById('arquivosList');
+    container.innerHTML = '';
+
+    const filtrados = arquivos.filter(file => 
+      file.nome.toLowerCase().includes(filtro) &&
+      (!dataFiltro || file.data.startsWith(dataFiltro)) &&
+      (!categoriaFiltro || file.categoria === categoriaFiltro)
+    );
+
+    document.getElementById('totalCount').textContent = filtrados.length;
+
+    if (!filtrados.length) {
+      container.innerHTML = '<div class="text-muted">Nenhum arquivo.</div>';
+    } else {
+      filtrados.forEach((file, index) => {
+        const div = document.createElement('div');
+        div.className = 'file-item';
+        div.innerHTML = `
+          <span>${file.nome} <small>(${file.data} - ${file.categoria})</small></span>
+          <div class="file-actions">
+            <button onclick="editarArquivo(${index})"><i class="bi bi-pencil"></i></button>
+            <button onclick="removerArquivo(${index})"><i class="bi bi-trash"></i></button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+  }
+
+  function enviarArquivos(files = null) {
+    const categoria = document.getElementById('filterCategoria').value || 'Sem Categoria';
+    const arquivoInput = document.getElementById('arquivo');
+    const filesToUpload = files || Array.from(arquivoInput.files);
+    if (!filesToUpload.length) return mostrarToast('Nenhum arquivo selecionado.');
+
+    filesToUpload.forEach(file => {
+      const data = new Date().toISOString().split('T')[0];
+      arquivos.push({ nome: file.name, data, categoria });
+    });
+    localStorage.setItem('situacoesArquivos', JSON.stringify(arquivos));
+    renderArquivos();
+    mostrarToast('Arquivo(s) enviado(s)!');
+    arquivoInput.value = '';
+  }
+
+  function editarArquivo(index) {
+    const novoNome = prompt('Digite o novo nome:', arquivos[index].nome);
+    const novaCategoria = prompt('Digite a nova categoria:', arquivos[index].categoria);
+    if (novoNome && novaCategoria) {
+      arquivos[index].nome = novoNome;
+      arquivos[index].categoria = novaCategoria;
+      localStorage.setItem('situacoesArquivos', JSON.stringify(arquivos));
+      renderArquivos();
+      mostrarToast('Arquivo editado!');
+    }
+  }
+
+  function removerArquivo(index) {
+    if (confirm('Deseja remover este arquivo?')) {
+      arquivos.splice(index, 1);
+      localStorage.setItem('situacoesArquivos', JSON.stringify(arquivos));
+      renderArquivos();
+      mostrarToast('Arquivo removido!');
+    }
+  }
+
+  function ordenarArquivos() {
+    arquivos.sort((a, b) => a.nome.localeCompare(b.nome));
+    localStorage.setItem('situacoesArquivos', JSON.stringify(arquivos));
+    renderArquivos();
+    mostrarToast('Arquivos ordenados!');
+  }
+
+  function exportarArquivos() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(arquivos));
+    const dlAnchor = document.createElement('a');
+    dlAnchor.href = dataStr;
+    dlAnchor.download = "situacoes_arquivos.json";
+    dlAnchor.click();
+    mostrarToast('Arquivos exportados!');
+  }
+
+  document.getElementById('searchInput').addEventListener('input', renderArquivos);
+  document.getElementById('filterDate').addEventListener('change', renderArquivos);
+  document.getElementById('filterCategoria').addEventListener('change', renderArquivos);
+  document.getElementById('btnOrdenar').addEventListener('click', ordenarArquivos);
+  document.getElementById('btnEnviar').addEventListener('click', () => enviarArquivos());
+  document.getElementById('btnExportar').addEventListener('click', exportarArquivos);
+
+  const dropZone = document.getElementById('dropZone');
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('dragover'); enviarArquivos(e.dataTransfer.files); });
+
+  renderArquivos();
+</script>
+
+</body>
+</html>
