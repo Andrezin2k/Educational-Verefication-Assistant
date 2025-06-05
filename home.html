@@ -28,7 +28,7 @@
       color: var(--text-color);
       display: flex;
       flex-direction: column;
-      background: linear-gradient(270deg, #a0e9ff, #f0f0f0, #a0e9ff);
+      background: linear-gradient(270deg, #0b80a3, #60aaff, #6a9faf);
       background-size: 600% 600%;
       animation: gradientBG 15s ease infinite;
       position: relative;
@@ -216,7 +216,6 @@
   <audio id="clickSound" src="click.mp3"></audio>
   <audio id="ambientSound" src="The Bard Who Played Where Heroes Fell – Medieval Ambience & Lament [6ExRAToHhJU].mp3" loop></audio>
 
-  <!-- HEADER COM CALENDÁRIO DESTAQUE -->
   <header>
     <div class="d-flex align-items-center icon-click">
       <i class="bi bi-house-door fs-3 me-2"></i>
@@ -245,15 +244,19 @@
     <button onclick="playClick(); location.href='per.html';" class="btn btn-large">
       <i class="bi bi-journal-text me-2 fs-4"></i>PER
     </button>
-    
+
     <button onclick="playClick(); location.href='situacoes.html';" class="btn btn-large">
       <i class="bi bi-calendar-event me-2 fs-4"></i>Situações de Aprendizagem
     </button>
-    
+
     <button onclick="playClick(); location.href='avaliacoes.html';" class="btn btn-large">
       <i class="bi bi-file-earmark-text me-2 fs-4"></i>Avaliações
     </button>
 
+    <!-- NOVO BOTÃO ADICIONADO AQUI -->
+    <button onclick="playClick(); location.href='recursos.html';" class="btn btn-large">
+      <i class="bi bi-lightbulb me-2 fs-4"></i>Recursos
+    </button>
   </main>
 
   <footer class="footer">
@@ -274,24 +277,24 @@
 
   <script>
     particlesJS("particles-js", {
-      "particles": {
-        "number": { "value": 80 },
-        "color": { "value": "#ffffff" },
-        "shape": { "type": "circle" },
-        "opacity": { "value": 0.5 },
-        "size": { "value": 3 },
-        "line_linked": { "enable": true, "distance": 150, "color": "#ffffff", "opacity": 0.4, "width": 1 },
-        "move": { "enable": true, "speed": 2 }
+      particles: {
+        number: { value: 80 },
+        color: { value: "#ffffff" },
+        shape: { type: "circle" },
+        opacity: { value: 0.5 },
+        size: { value: 3 },
+        line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.4, width: 1 },
+        move: { enable: true, speed: 2 }
       },
-      "interactivity": {
-        "detect_on": "canvas",
-        "events": {
-          "onhover": { "enable": true, "mode": "repulse" },
-          "onclick": { "enable": true, "mode": "push" }
+      interactivity: {
+        detect_on: "canvas",
+        events: {
+          onhover: { enable: true, mode: "repulse" },
+          onclick: { enable: true, mode: "push" }
         },
-        "modes": {
-          "repulse": { "distance": 100 },
-          "push": { "particles_nb": 4 }
+        modes: {
+          repulse: { distance: 100 },
+          push: { particles_nb: 4 }
         }
       }
     });
@@ -305,9 +308,7 @@
     }
 
     document.querySelectorAll('.icon-click').forEach(el => {
-      el.addEventListener('click', () => {
-        playClick();
-      });
+      el.addEventListener('click', playClick);
     });
 
     document.addEventListener('DOMContentLoaded', () => {
